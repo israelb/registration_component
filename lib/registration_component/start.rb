@@ -4,7 +4,7 @@ module RegistrationComponent
   module Start
     def self.call
       Consumers::Commands.start("registration:command")
-      Consumers::Events.start("registration")
+      # Consumers::Events.start("registration")
     end
   end
 end

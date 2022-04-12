@@ -7,10 +7,8 @@ module RegistrationComponent
       include Messaging::Handle
       include Messaging::StreamName
       include Log::Dependency
-      # TODO include Messages::Commands once commands are implemented
-      # include Messages::Commands
-      # TODO include Messages::Events once events are implemented
-      # include Messages::Events
+      include Messages::Commands
+      include Messages::Events
 
       dependency :write, Messaging::Postgres::Write
       dependency :clock, Clock::UTC
@@ -23,6 +21,26 @@ module RegistrationComponent
       end
 
       category :registration
+
+      handle Register do |register|
+        registration_id = register.registration_id 
+
+        registration, version = store.fetch(registration_id, include: :version)
+
+        if registration.registered?
+          logger.info(tag: :ignored) { "Command ignored (command: #{register.message_type})" }
+          return
+        end
+
+        time = clock.iso8601
+
+        stream_name = stream_name(registration_id)
+
+        registered = Registered.follow(register)
+        registered.processed_time = time
+
+        write.(registered, stream_name, expected_version: version)
+      end
 
       # TODO Implement command handler blocks"
       # eg:

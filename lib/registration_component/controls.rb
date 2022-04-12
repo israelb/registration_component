@@ -7,11 +7,13 @@ require "registration_component/controls/version"
 
 require "registration_component/controls/events/registered"
 
+require "registration_component/controls/write/register"
+
 require "registration_component/controls/registration"
 require "registration_component/controls/user"
 
 # TODO Implement command controls (if using controls as part of your testing methodology)"
-# require "registration_component/controls/commands/..."
+require "registration_component/controls/commands/register"
 
 # TODO Implement event controls (if using controls as part of your testing methodology)"
-# require "registration_component/controls/events/..."
+require "registration_component/controls/events/registered"
